@@ -1,6 +1,10 @@
 import discord
 
-async def safe_ctx_respond(*args: discord.ApplicationContext.respond.args, **kwargs: discord.ApplicationContext.respond.kwargs) -> None:
+
+async def safe_ctx_respond(
+    *args: discord.ApplicationContext.respond.args,
+    **kwargs: discord.ApplicationContext.respond.kwargs,
+) -> None:
     """
     Safely responds to a Discord interaction.
 
@@ -11,7 +15,7 @@ async def safe_ctx_respond(*args: discord.ApplicationContext.respond.args, **kwa
 
     Raises:
         ValueError: If `ctx` is not provided in the `kwargs`.
-    
+
     Examples:
         ```py
         # Respond to an interaction
@@ -21,11 +25,11 @@ async def safe_ctx_respond(*args: discord.ApplicationContext.respond.args, **kwa
     # Get the context from the kwargs
     ctx: discord.ApplicationContext = kwargs.get("ctx", None)
     kwargs.pop("ctx", None)
-    
+
     # Raise an error if context is not provided
     if ctx is None:
         raise ValueError("ctx is a required keyword argument")
-    
+
     try:
         # Try to respond to the interaction
         await ctx.respond(*args, **kwargs)
