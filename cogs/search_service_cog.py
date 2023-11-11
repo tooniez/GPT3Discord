@@ -363,6 +363,9 @@ class SearchService(discord.Cog, name="SearchService"):
             used_tools = []
             try:
                 # Start listening to STDOUT before this call. We wanna track all the output for this specific call below
+                self.usage_service.update_usage_memory(
+                    message.guild.name, "internet_chat_message", 1
+                )
                 response, stdout_output = await capture_stdout(
                     self.bot.loop.run_in_executor, None, agent.run, prompt
                 )
@@ -391,13 +394,14 @@ class SearchService(discord.Cog, name="SearchService"):
                 return
 
             if len(response) > 2000:
-                embed_pages = await EmbedStatics.paginate_chat_embed(response)
-                paginator = pages.Paginator(
-                    pages=embed_pages,
-                    timeout=None,
-                    author_check=False,
-                )
-                await paginator.respond(message)
+                embed_pages = EmbedStatics.paginate_chat_embed(response)
+
+                for x, page in enumerate(embed_pages):
+                    if x == 0:
+                        previous_message = await message.reply(embed=page)
+                    else:
+                        previous_message = previous_message.reply(embed=page)
+
             else:
                 response = response.replace("\\n", "\n")
                 # Build a response embed

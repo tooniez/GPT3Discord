@@ -22,7 +22,7 @@ class EmbedStatics:
         for count, chunk in enumerate(response_text, start=1):
             if not first:
                 page = discord.Embed(
-                    title=f"{count}",
+                    title=f"{count}" if len(response_text) > 1 else "",
                     description=chunk,
                 )
                 first = True

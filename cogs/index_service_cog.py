@@ -5,6 +5,7 @@ import aiofiles
 import discord
 import os
 
+import openai
 from discord.ext import pages
 
 from models.embed_statics_model import EmbedStatics
@@ -172,28 +173,25 @@ class IndexService(discord.Cog, name="IndexService"):
                     + str(link)
                     + "}"
                 )
-
-            chat_result = await self.index_handler.execute_index_chat_message(
-                message, prompt
-            )
+            try:
+                chat_result = await self.index_handler.execute_index_chat_message(
+                    message, prompt
+                )
+            except openai.BadRequestError as e:
+                traceback.print_exc()
+                await message.reply(
+                    "This model is not supported with connected conversations."
+                )
 
             if chat_result:
                 if len(chat_result) > 2000:
-                    embed_pages = await EmbedStatics.paginate_chat_embed(chat_result)
-                    paginator = pages.Paginator(
-                        pages=embed_pages,
-                        timeout=None,
-                        author_check=False,
-                    )
-                    try:
-                        await paginator.respond(message)
-                    except:
-                        chat_result = [
-                            chat_result[i : i + 1900]
-                            for i in range(0, len(chat_result), 1900)
-                        ]
-                        for count, chunk in enumerate(chat_result, start=1):
-                            await message.channel.send(chunk)
+                    embed_pages = EmbedStatics.paginate_chat_embed(chat_result)
+
+                    for x, page in enumerate(embed_pages):
+                        if x == 0:
+                            previous_message = await message.reply(embed=page)
+                        else:
+                            previous_message = previous_message.reply(embed=page)
 
                 else:
                     chat_result = chat_result.replace("\\n", "\n")
