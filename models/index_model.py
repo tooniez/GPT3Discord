@@ -1485,7 +1485,7 @@ class Index_handler:
                     f"Channel id {channel_id} must be an integer, "
                     f"not {type(channel_id)}."
                 )
-            (channel_content, channel_name) = await self.read_channel(
+            channel_content, channel_name = await self.read_channel(
                 channel_id, limit=limit, oldest_first=oldest_first
             )
             results.append(
@@ -1646,10 +1646,12 @@ class ComposeModal(discord.ui.View):
                         self.user_id,
                         indexes,
                         self.name,
-                        False
-                        if not self.deep_select.values
-                        or self.deep_select.values[0] == "no"
-                        else True,
+                        (
+                            False
+                            if not self.deep_select.values
+                            or self.deep_select.values[0] == "no"
+                            else True
+                        ),
                     )
                 except ValueError as e:
                     await interaction.followup.send(

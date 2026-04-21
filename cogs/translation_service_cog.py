@@ -6,7 +6,6 @@ import discord
 from models.deepl_model import TranslationModel
 from services.environment_service import EnvService
 
-
 ALLOWED_GUILDS = EnvService.get_allowed_guilds()
 
 
@@ -28,9 +27,9 @@ def build_translation_embed(
     )
     embed.set_footer(
         text=f"Requested by {requestor.name}#{requestor.discriminator}",
-        icon_url=requestor.avatar.url
-        if requestor.avatar
-        else requestor.default_avatar.url,
+        icon_url=(
+            requestor.avatar.url if requestor.avatar else requestor.default_avatar.url
+        ),
     )
 
     return embed

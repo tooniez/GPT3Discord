@@ -398,9 +398,11 @@ class Search:
             if not redo:
                 self.add_search_index(
                     index,
-                    ctx.user.id
-                    if isinstance(ctx, discord.ApplicationContext)
-                    else ctx.author.id,
+                    (
+                        ctx.user.id
+                        if isinstance(ctx, discord.ApplicationContext)
+                        else ctx.author.id
+                    ),
                     query,
                 )
 

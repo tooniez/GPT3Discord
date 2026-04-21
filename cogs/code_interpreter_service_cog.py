@@ -258,11 +258,16 @@ class CodeInterpreterService(discord.Cog, name="CodeInterpreterService"):
                     pages=embed_pages,
                     timeout=None,
                     author_check=False,
-                    custom_view=CodeInterpreterDownloadArtifactsView(
-                        message, self, self.sessions[message.channel.id], artifact_names
-                    )
-                    if artifacts_available
-                    else None,
+                    custom_view=(
+                        CodeInterpreterDownloadArtifactsView(
+                            message,
+                            self,
+                            self.sessions[message.channel.id],
+                            artifact_names,
+                        )
+                        if artifacts_available
+                        else None
+                    ),
                 )
                 try:
                     await paginator.respond(message)
@@ -293,11 +298,16 @@ class CodeInterpreterService(discord.Cog, name="CodeInterpreterService"):
                 )
                 await message.reply(
                     embed=response_embed,
-                    view=CodeInterpreterDownloadArtifactsView(
-                        message, self, self.sessions[message.channel.id], artifact_names
-                    )
-                    if artifacts_available
-                    else None,
+                    view=(
+                        CodeInterpreterDownloadArtifactsView(
+                            message,
+                            self,
+                            self.sessions[message.channel.id],
+                            artifact_names,
+                        )
+                        if artifacts_available
+                        else None
+                    ),
                 )
 
             self.thread_awaiting_responses.remove(message.channel.id)

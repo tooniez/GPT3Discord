@@ -866,9 +866,9 @@ class Model:
         self,
         text,
         pretext,
-    ) -> (
-        Tuple[dict, bool]
-    ):  # The response, and a boolean indicating whether or not the context limit was reached.
+    ) -> Tuple[
+        dict, bool
+    ]:  # The response, and a boolean indicating whether or not the context limit was reached.
         # Validate that  all the parameters are in a good state before we send the request
 
         prompt = f"{pretext}{text}\nOutput:"
@@ -932,9 +932,9 @@ class Model:
         max_tokens_override=None,
         stop=None,
         custom_api_key=None,
-    ) -> (
-        Tuple[dict, bool]
-    ):  # The response, and a boolean indicating whether or not the context limit was reached.
+    ) -> Tuple[
+        dict, bool
+    ]:  # The response, and a boolean indicating whether or not the context limit was reached.
         # Validate that  all the parameters are in a good state before we send the request
         model_selection = self.model if not model else model
 
@@ -1026,17 +1026,21 @@ class Model:
                 "stop": "" if stop is None else stop,
                 "temperature": self.temp if temp_override is None else temp_override,
                 "top_p": self.top_p if top_p_override is None else top_p_override,
-                "presence_penalty": self.presence_penalty
-                if presence_penalty_override is None
-                else presence_penalty_override,
-                "frequency_penalty": self.frequency_penalty
-                if frequency_penalty_override is None
-                else frequency_penalty_override,
+                "presence_penalty": (
+                    self.presence_penalty
+                    if presence_penalty_override is None
+                    else presence_penalty_override
+                ),
+                "frequency_penalty": (
+                    self.frequency_penalty
+                    if frequency_penalty_override is None
+                    else frequency_penalty_override
+                ),
             }
             if "-vision" in model_selection:
-                payload[
-                    "max_tokens"
-                ] = 4096  # TODO Not sure if this needs to be subtracted from a token count..
+                payload["max_tokens"] = (
+                    4096  # TODO Not sure if this needs to be subtracted from a token count..
+                )
 
             headers = {
                 "Authorization": f"Bearer {self.openai_key if not custom_api_key else custom_api_key}"
@@ -1083,12 +1087,16 @@ class Model:
             data.add_field(
                 "file",
                 file.read() if isinstance(file, discord.Attachment) else file.fp.read(),
-                filename="audio." + file.filename.split(".")[-1]
-                if isinstance(file, discord.Attachment)
-                else "audio.mp4",
-                content_type=file.content_type
-                if isinstance(file, discord.Attachment)
-                else "video/mp4",
+                filename=(
+                    "audio." + file.filename.split(".")[-1]
+                    if isinstance(file, discord.Attachment)
+                    else "audio.mp4"
+                ),
+                content_type=(
+                    file.content_type
+                    if isinstance(file, discord.Attachment)
+                    else "video/mp4"
+                ),
             )
 
             if temperature_override:
@@ -1164,22 +1172,28 @@ class Model:
                     "model": self.model if model is None else model,
                     "prompt": prompt,
                     "stop": "" if stop is None else stop,
-                    "temperature": self.temp
-                    if temp_override is None
-                    else temp_override,
+                    "temperature": (
+                        self.temp if temp_override is None else temp_override
+                    ),
                     "top_p": self.top_p if top_p_override is None else top_p_override,
-                    "max_tokens": self.max_tokens - tokens
-                    if max_tokens_override is None
-                    else max_tokens_override,
-                    "presence_penalty": self.presence_penalty
-                    if presence_penalty_override is None
-                    else presence_penalty_override,
-                    "frequency_penalty": self.frequency_penalty
-                    if frequency_penalty_override is None
-                    else frequency_penalty_override,
-                    "best_of": self.best_of
-                    if not best_of_override
-                    else best_of_override,
+                    "max_tokens": (
+                        self.max_tokens - tokens
+                        if max_tokens_override is None
+                        else max_tokens_override
+                    ),
+                    "presence_penalty": (
+                        self.presence_penalty
+                        if presence_penalty_override is None
+                        else presence_penalty_override
+                    ),
+                    "frequency_penalty": (
+                        self.frequency_penalty
+                        if frequency_penalty_override is None
+                        else frequency_penalty_override
+                    ),
+                    "best_of": (
+                        self.best_of if not best_of_override else best_of_override
+                    ),
                 }
                 headers = {
                     "Authorization": f"Bearer {self.openai_key if not custom_api_key else custom_api_key}"
@@ -1211,16 +1225,20 @@ class Model:
                     "model": self.model if not model else model,
                     "messages": messages,
                     "stop": "" if stop is None else stop,
-                    "temperature": self.temp
-                    if temp_override is None
-                    else temp_override,
+                    "temperature": (
+                        self.temp if temp_override is None else temp_override
+                    ),
                     "top_p": self.top_p if top_p_override is None else top_p_override,
-                    "presence_penalty": self.presence_penalty
-                    if presence_penalty_override is None
-                    else presence_penalty_override,
-                    "frequency_penalty": self.frequency_penalty
-                    if frequency_penalty_override is None
-                    else frequency_penalty_override,
+                    "presence_penalty": (
+                        self.presence_penalty
+                        if presence_penalty_override is None
+                        else presence_penalty_override
+                    ),
+                    "frequency_penalty": (
+                        self.frequency_penalty
+                        if frequency_penalty_override is None
+                        else frequency_penalty_override
+                    ),
                 }
                 headers = {
                     "Authorization": f"Bearer {self.openai_key if not custom_api_key else custom_api_key}"
