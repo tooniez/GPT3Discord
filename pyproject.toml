@@ -48,7 +48,7 @@ dependencies = [
 "pytest~=7.2.2",
 "google-api-python-client==2.85.0",
 "wolframalpha==5.0.0",
-"nltk==3.8.1",
+"nltk==3.9.2",
 "replicate==0.15.4",
 "tiktoken==0.4.0",
 "pydantic==2.4.2",
